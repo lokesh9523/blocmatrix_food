@@ -1,20 +1,14 @@
 'use strict';
-//sequelize
-// var path = require('path');
 import path from 'path'
+
 var fs = require('fs');
 var Sequelize = require('sequelize');
 var basename = path.basename(__filename);
 var env = process.env.NODE_ENV || 'development';
-var config = require(__dirname + '/sequalizeConfig.json')[env];
+var config = require(__dirname + '/../../config/mysql.json');
 var db = {};
 
-if (config.use_env_variable) {
-	var sequelize = new Sequelize(process.env[config.use_env_variable]);
-} else {
-	var sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
-
+var sequelize = new Sequelize(config.database, config.username, config.password, config);
 fs
 	.readdirSync(__dirname)
 	.filter(function (file) {
@@ -31,11 +25,6 @@ Object.keys(db).forEach(function (modelName) {
 	}
 });
 
-process.on('SIGINT', function () {
-	console.log('Killing Sequalize Connection')
-	sequelize.close()
-	console.log('killed Sequelize Connection')
-})
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

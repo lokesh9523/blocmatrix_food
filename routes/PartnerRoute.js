@@ -1,7 +1,8 @@
 import express from 'express';
 
 import {
-	Register as registerController
+	Register as registerController,
+	Login as loginController
 } from './../controllers';
 
 var router = express.Router();
@@ -13,10 +14,22 @@ router.get('/', function (req, res, next) {
 	});
 });
 
-router.get('/register', function (req, res, next) {
-    registerController.get()
+router.post('/register', function (req, res, next) {
+    registerController.post(req.body)
 	.then((response) => {
         res.status(200);
+		res.send({
+            message: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+});
+router.post('/login',function(req,res,next){
+	loginController.post(req.body).then((response)=>{
+		res.status(200);
 		res.send({
             message: response
         });

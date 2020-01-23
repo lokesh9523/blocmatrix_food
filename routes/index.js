@@ -12,7 +12,7 @@ let router = Router();
 /* Main Routes. */
 
 module.exports = function (app) {
-	router.use('/', IndexRoute);
-    router.use('/partner', PartnerRoute);
+	// router.use('/', IndexRoute);
+    router.use('/', PartnerRoute);
 	return router;
 }
