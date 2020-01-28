@@ -1,6 +1,7 @@
 import {
 	sequelize,
-	login
+	login,
+	partner_details
 } from './../../models';
 var md5 = require('md5');
 import q from 'q';
@@ -8,11 +9,11 @@ import q from 'q';
 const get = (data) => {
 	let defer = q.defer();
 	defer.resolve({
-        "message" : "done"
-    });
+		"message": "done"
+	});
 	return defer.promise;
 }
-const post = (data) =>{
+const post = (data) => {
 	let defer = q.defer();
 	if (!data.username) {
 		defer.reject({
@@ -43,8 +44,21 @@ const post = (data) =>{
 		return defer.promise;
 	}
 	data.password = md5(data.password);
-	login.create(data).then(logindata=>{
-		if(logindata){
+	login.create(data).then(logindata => {
+		if (logindata) {
+			let partnerdata = {
+				"login_id": logindata.id,
+				"amount": 0
+			}
+			partner_details.create(partnerdata).then(partnerdata => {
+
+			}).catch(error => {
+				defer.reject({
+					status: 400,
+					message: error.message
+				});
+				return defer.promise;
+			});
 			defer.resolve(logindata)
 		}
 	}).catch(error => {

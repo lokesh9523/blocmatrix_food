@@ -1,6 +1,7 @@
 import {
     sequelize,
-    login
+    login,
+    partner_details
 } from './../../models';
 
 import q from 'q';
@@ -29,12 +30,16 @@ const post = (data) => {
         return defer.promise;
     }
     let md5Password = md5(data.password);
-
+    login.hasOne(partner_details, { foreignKey: 'login_id', targetKey: 'id' });
+	partner_details.belongsTo(login, { foreignKey: 'login_id', targetKey: 'id' });
     login.findOne({
             where: {
                 password: md5Password,
                 username: data.username
-            },
+            },include: [
+                {
+                    model: partner_details
+                }]
         })
         .then(function (logindata) {
             if (logindata) {
