@@ -29,13 +29,13 @@ const post = (data) => {
 		});
 		return defer.promise;
 	}
-	if (!data.name) {
-		defer.reject({
-			status: 403,
-			message: "Name is missing"
-		});
-		return defer.promise;
-	}
+	// if (!data.name) {
+	// 	defer.reject({
+	// 		status: 403,
+	// 		message: "Name is missing"
+	// 	});
+	// 	return defer.promise;
+	// }
 	if (!data.email) {
 		defer.reject({
 			status: 403,
