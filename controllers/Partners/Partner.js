@@ -6,6 +6,8 @@ import {
 } from './../../models';
 
 import q from 'q';
+
+import xlsx from 'node-xlsx';
 var md5 = require('md5');
 
 const put = (data) => {
@@ -69,6 +71,7 @@ const get = (req) =>{
 }
 const post = (req,file) =>{
     let defer = q.defer();
+    let promises = [];
     let data = req.params;
     if(!data.login_id){
         defer.reject({
@@ -77,24 +80,35 @@ const post = (req,file) =>{
         });
         return defer.promise;
     }
-    let body = {
-        "login_id":data.login_id,
-        "url": file[0].path,
-        "name":file[0].originalname,
-        "file_size":file[0].size,
-        "status":50
+    var fs = require('fs');
 
-    };
-    console.log(body);
-    partner_data_list.create(body).then(datalist=>{
-        defer.resolve(datalist);
-    }).catch(error=>{
+    const workSheetsFromFile = xlsx.parse(`${file[0].path}`);
+    if(workSheetsFromFile[0].data.length ==1 || !workSheetsFromFile[0].data.length){
         defer.reject({
-            status: 400,
-            message: error.message
+            status:403,
+            message:"File contains empty data"
         });
         return defer.promise;
-    })
+    }
+        let body = {
+            "login_id":data.login_id,
+            "url": file[0].path,
+            "name":file[0].originalname,
+            "file_size":workSheetsFromFile[0].data.length - 1,
+            "status":50
+    
+        };
+        partner_data_list.create(body).then(datalist=>{
+            defer.resolve(datalist);
+        }).catch(error=>{
+            defer.reject({
+                status: 400,
+                message: error.message
+            });
+            return defer.promise;
+        })
+    
+    
     return defer.promise;
 
 }
