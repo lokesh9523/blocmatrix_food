@@ -32,7 +32,6 @@ router.route('/:login_id').post( upload.any(),function(req, res, next){
 	 err.httpStatusCode = 400
 	 return next(err)
    }
-   console.log("im here",files);
    partnerController.post(req,files).then((response) => {
 	   res.status(200);
 	   res.send({

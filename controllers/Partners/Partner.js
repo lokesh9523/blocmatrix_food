@@ -90,6 +90,15 @@ const post = (req,file) =>{
         });
         return defer.promise;
     }
+    var fs = require('fs');
+    var duplicate = "duplicate";
+    var dir = duplicate.concat('/partner_'+req.params.login_id);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+        fs.copyFile(file[0].path,'duplicate/partner_'+ data.login_id +'/'+ file[0].originalname,(err)=>{
+            if(err){console.log(err)}
+        })
         let body = {
             "login_id":data.login_id,
             "url": file[0].path,
