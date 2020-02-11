@@ -29,13 +29,7 @@ const post = (data) => {
 		});
 		return defer.promise;
 	}
-	// if (!data.name) {
-	// 	defer.reject({
-	// 		status: 403,
-	// 		message: "Name is missing"
-	// 	});
-	// 	return defer.promise;
-	// }
+
 	if (!data.email) {
 		defer.reject({
 			status: 403,
@@ -44,14 +38,36 @@ const post = (data) => {
 		return defer.promise;
 	}
 	data.password = md5(data.password);
-	login.create(data).then(logindata => {
-		if (logindata) {
-			let partnerdata = {
-				"login_id": logindata.id,
-				"amount": 0
-			}
-			partner_details.create(partnerdata).then(partnerdata => {
+	login.findOne({
+		where: {
+			username:data.username
 
+		},
+	}).then(registereddata => {
+		if (registereddata) {
+			defer.reject({
+				status: 403,
+				message: "Username  already registered"
+			});
+			return defer.promise;
+		} else {
+			login.create(data).then(logindata => {
+				if (logindata) {
+					let partnerdata = {
+						"login_id": logindata.id,
+						"amount": 0
+					}
+					partner_details.create(partnerdata).then(partnerdata => {
+
+					}).catch(error => {
+						defer.reject({
+							status: 400,
+							message: error.message
+						});
+						return defer.promise;
+					});
+					defer.resolve(logindata)
+				}
 			}).catch(error => {
 				defer.reject({
 					status: 400,
@@ -59,8 +75,8 @@ const post = (data) => {
 				});
 				return defer.promise;
 			});
-			defer.resolve(logindata)
 		}
+
 	}).catch(error => {
 		defer.reject({
 			status: 400,
@@ -68,6 +84,7 @@ const post = (data) => {
 		});
 		return defer.promise;
 	});
+
 	return defer.promise;
 }
 

@@ -57,8 +57,12 @@ const get = (req) =>{
         });
         return defer.promise;
     }
-    partner_data_list.findAll({where:{login_id:data.login_id,
-    active:1}}).then(datalist=>{
+    partner_data_list.findAll(
+        {where:{login_id:data.login_id},
+        order:[
+            ['id','DESC']
+        ]}
+        ).then(datalist=>{
         defer.resolve(datalist);
     }).catch(error => {
             defer.reject({
@@ -104,7 +108,7 @@ const post = (req,file) =>{
             "url": file[0].path,
             "name":file[0].originalname,
             "file_size":workSheetsFromFile[0].data.length - 1,
-            "status":50
+            "status":0
     
         };
         partner_data_list.create(body).then(datalist=>{
@@ -132,7 +136,8 @@ const Delete = (req) =>{
         return defer.promise;
     }
     let updatedata = {
-        "active":0
+        "active":0,
+        "status":100
     }
     partner_data_list.update(updatedata,{
         where:{
@@ -149,11 +154,43 @@ const Delete = (req) =>{
     })
     return defer.promise;
 }
+const getPartnerDetails = (req) =>{
+    let defer = q.defer();
+    let data = req.params;
+    if (!data.login_id) {
+        defer.reject({
+            status: 403,
+            message: "Login Id is missing"
+        });
+        return defer.promise;
+    }
+    login.hasOne(partner_details, { foreignKey: 'login_id', targetKey: 'id' });
+	partner_details.belongsTo(login, { foreignKey: 'login_id', targetKey: 'id' });
+    login.findOne({
+            where: {
+                id:data.login_id
+            },include: [
+                {
+                    model: partner_details
+                }]
+        })
+        .then(function (logindata) {
+                defer.resolve(logindata)
+        }).catch(error => {
+            defer.reject({
+                status: 400,
+                message: error.message
+            });
+            return defer.promise;
+        });
+    return defer.promise;
+}
 const Partner = {
     put,
     get,
     post,
-    Delete
+    Delete,
+    getPartnerDetails
 };
 
 export {
