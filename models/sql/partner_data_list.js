@@ -20,9 +20,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(100),
       allowNull: false
     },
-    file_size: {
+    email_count: {
       type: DataTypes.STRING(45),
       allowNull: false
+    },
+    email_cleaned: {
+      type: DataTypes.STRING(45),
+      allowNull: true,
+      defaultValue: '0'
     },
     status: {
       type: DataTypes.STRING(45),

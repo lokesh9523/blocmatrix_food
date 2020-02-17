@@ -74,4 +74,14 @@ router.route('/:login_id/data/:partner_id').delete(function(req,res,next){
 		next(err);
 	})
 })
+router.route('/:login_id/data/:id').put(function(req,res,next){
+	partnerController.updatePartnerData(req).then((response)=>{
+		res.status(200);
+		res.send({
+			data:response
+		});
+	}).catch(err =>{
+		next(err);
+	})
+})
 module.exports = router;
