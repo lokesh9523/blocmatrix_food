@@ -7,6 +7,8 @@ import {
 } from 'source-map-support'
 install();
 import app from './../app';
+
+var cron = require('node-cron');
 var debug = require('debug')('base-arch:server');
 var http = require('http')
 /**

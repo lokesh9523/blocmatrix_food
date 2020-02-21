@@ -1,9 +1,11 @@
 import {
     sequelize,
     login,
-    partner_details
+    partner_details,
+    partner_roles,
+    roles
 } from './../../models';
-
+import * as jwt from 'jsonwebtoken';
 import q from 'q';
 var md5 = require('md5');
 const get = (data) => {
@@ -31,7 +33,13 @@ const post = (data) => {
     }
     let md5Password = md5(data.password);
     login.hasOne(partner_details, { foreignKey: 'login_id', targetKey: 'id' });
-	partner_details.belongsTo(login, { foreignKey: 'login_id', targetKey: 'id' });
+    partner_details.belongsTo(login, { foreignKey: 'login_id', targetKey: 'id' });
+
+    login.hasOne(partner_roles,{ foreignKey:'login_id',targetKey:'id' });
+    partner_roles.belongsTo(login, { foreignKey: 'login_id', targetKey: 'id' });
+
+    roles.hasMany(partner_roles, { foreignKey: 'role_id' })
+	partner_roles.belongsTo(roles, { foreignKey: 'role_id' });
     login.findOne({
             where: {
                 password: md5Password,
@@ -39,10 +47,13 @@ const post = (data) => {
             },include: [
                 {
                     model: partner_details
-                }]
+                },{ model: partner_roles, include: [{ model: roles }] }]
         })
         .then(function (logindata) {
             if (logindata) {
+                let token = jwt.sign({data:logindata},'mailjanitar');
+                logindata.dataValues.token = token;
+                // console.log(logindata);
                 defer.resolve(logindata)
             } else {
                 defer.reject({

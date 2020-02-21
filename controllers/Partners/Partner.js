@@ -141,6 +141,18 @@ const post = (req, file) => {
 const Delete = (req) => {
     let defer = q.defer();
     let data = req.params;
+    if(tokendata.data.partner_role.role.name == "admin"){
+
+    }else{
+
+        if(tokendata.data.id != data.login_id){
+            defer.reject({
+                status: 403,
+                message: "User Id mismatch"
+            });
+            return defer.promise;
+        }
+    }
     if (!data.partner_id) {
         defer.reject({
             status: 403,
@@ -169,12 +181,25 @@ const Delete = (req) => {
 const getPartnerDetails = (req) => {
     let defer = q.defer();
     let data = req.params;
+    let tokendata = req.tokendata;
     if (!data.login_id) {
         defer.reject({
             status: 403,
             message: "Login Id is missing"
         });
         return defer.promise;
+    }
+    if(tokendata.data.partner_role.role.name == "admin"){
+
+    }else{
+
+        if(tokendata.data.id != data.login_id){
+            defer.reject({
+                status: 403,
+                message: "User Id mismatch"
+            });
+            return defer.promise;
+        }
     }
     login.hasOne(partner_details, {
         foreignKey: 'login_id',
@@ -214,6 +239,18 @@ const updatePartnerData = (req) => {
         });
         return defer.promise;
     }
+    if(tokendata.data.partner_role.role.name == "admin"){
+
+    }else{
+
+        if(tokendata.data.id != data.login_id){
+            defer.reject({
+                status: 403,
+                message: "User Id mismatch"
+            });
+            return defer.promise;
+        }
+    }
     partner_data_list.update(body, {
         where: {
             id: data.id
@@ -229,13 +266,78 @@ const updatePartnerData = (req) => {
     })
     return defer.promise;
 }
+const checkEther = (req)=>{
+    let defer = q.defer();
+    let data = req.params;
+    let body = req.body;
+    let tokendata = req.tokendata;
+    if (!data.login_id) {
+        defer.reject({
+            status: 403,
+            message: "Id is  missing"
+        });
+        return defer.promise;
+    }
+    if(tokendata.data.partner_role.role.name == "admin"){
+
+    }else{
+
+        if(tokendata.data.id != data.login_id){
+            defer.reject({
+                status: 403,
+                message: "User Id mismatch"
+            });
+            return defer.promise;
+        }
+    }
+    partner_details.findOne({
+        where: {
+            login_id: data.login_id
+        }
+    }).then(partnerdetailsdata => {
+        // console.log(partnerdetailsdata,"=======================");
+        const request = require('request');
+        var config = require(__dirname + '/../../config/ether.json');
+		   request({
+        url: config.api,
+        method: 'GET',
+        headers: {
+            "content-type": "application/json"
+        }
+    }, function (error, response, body) {
+        let transcationdata = JSON.parse(body);
+            transcationdata.result.forEach(element => {
+                console.log(element.from.toUpperCase(),"================",typeof element.from);
+                console.log(partnerdetailsdata.ether_account.toUpperCase(),"========",typeof partnerdetailsdata.ether_account);
+                if(element.from.toUpperCase() === partnerdetailsdata.ether_account.toUpperCase()){
+                    console.log("iam here");
+                }
+            });
+        defer.resolve(JSON.parse(body));
+
+        // console.log(response.result)
+        // console.log(body,"=================");
+        // //console.log(JSON.parse(body))
+        //  console.log("API Response ", response);
+        // // console.log("API Error ", error);
+    });
+    }).catch(error => {
+        defer.reject({
+            status: 400,
+            message: error.message
+        });
+        return defer.promise;
+    });
+    return defer.promise;
+}
 const Partner = {
     put,
     get,
     post,
     Delete,
     getPartnerDetails,
-    updatePartnerData
+    updatePartnerData,
+    checkEther
 };
 
 export {
