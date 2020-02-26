@@ -4,6 +4,7 @@ import {
 	Register as registerController,
 	Login as loginController,
 	Partner as partnerController,
+	Request as requestController
 } from './../controllers';
 import {
     upload,Token
@@ -12,7 +13,7 @@ var router = express.Router();
 
 
 router.route('/:login_id').put(Token, function (req, res, next) {
-    partnerController.put(req.body)
+    partnerController.put(req)
 	.then((response) => {
         res.status(200);
 		res.send({
@@ -84,15 +85,41 @@ router.route('/:login_id/data/:id').put(Token,function(req,res,next){
 		next(err);
 	})
 })
-router.route('/:login_id/ether').put(Token,function(req,res,next){
-	partnerController.checkEther(req).then((response)=>{
-		res.status(200);
+// router.route('/:login_id/ether').put(Token,function(req,res,next){
+// 	partnerController.checkEther(req).then((response)=>{
+// 		res.status(200);
+// 		res.send({
+// 			data:response
+// 		});
+// 	}).catch(err =>{
+// 		next(err);
+// 	})
+// })
+
+router.route('/:login_id/ether').put(Token, function (req, res, next) {
+    partnerController.addPartnerEtheraccount(req)
+	.then((response) => {
+        res.status(200);
 		res.send({
-			data:response
-		});
-	}).catch(err =>{
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
 		next(err);
 	})
-})
-
+});
+router.route('/:login_id/request').post(Token,function (req,res,next){
+	requestController.post(req)
+	.then((response) => {
+        res.status(200);
+		res.send({
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+});
 module.exports = router;

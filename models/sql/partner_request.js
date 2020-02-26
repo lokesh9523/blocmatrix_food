@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('partner_details', {
+  return sequelize.define('partner_request', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -9,29 +9,24 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true
     },
     login_id: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
+      type: DataTypes.BIGINT,
       allowNull: false
     },
-    amount: {
+    jan_coins: {
       type: DataTypes.BIGINT,
       allowNull: true
     },
     date_created: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     },
     date_updated: {
       type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
-    },
-    ether_account: {
-      type: DataTypes.STRING(200),
       allowNull: true
     }
   }, {
-    tableName: 'partner_details',
+    tableName: 'partner_request',
     createdAt: false,
     updatedAt: false
   });

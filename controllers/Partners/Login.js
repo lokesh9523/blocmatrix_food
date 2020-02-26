@@ -49,7 +49,7 @@ const post = (data) => {
                     model: partner_details
                 },{ model: partner_roles, include: [{ model: roles }] }]
         })
-        .then(function (logindata) {
+        .then(logindata=> {
             if (logindata) {
                 let token = jwt.sign({data:logindata},'mailjanitar');
                 logindata.dataValues.token = token;

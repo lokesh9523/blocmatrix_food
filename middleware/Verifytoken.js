@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 
 let Token = (req,res,next)=>{
     let token = req.headers['authorization'];
-    console.log(token,"============");
+    // console.log(token,"============");
 	if (!token){
 		return next(new Error("This Api Requires token"));
     }

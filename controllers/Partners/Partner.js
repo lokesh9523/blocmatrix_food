@@ -10,14 +10,28 @@ import q from 'q';
 import xlsx from 'node-xlsx';
 var md5 = require('md5');
 
-const put = (data) => {
+const put = (req) => {
     let defer = q.defer();
+    let data = req.body;
+    let tokendata = req.tokendata;
     if (!data.login_id) {
         defer.reject({
             status: 403,
             message: "Login Id is missing"
         });
         return defer.promise;
+    }
+    if(tokendata.data.partner_role.role.name == "admin"){
+
+    }else{
+
+        if(tokendata.data.id != data.login_id){
+            defer.reject({
+                status: 403,
+                message: "User Id mismatch"
+            });
+            return defer.promise;
+        }
     }
     partner_details.update(data, {
         where: {
@@ -52,12 +66,25 @@ const put = (data) => {
 const get = (req) => {
     let defer = q.defer();
     let data = req.params;
+    let tokendata = req.tokendata;
     if (!data.login_id) {
         defer.reject({
             status: 403,
             message: "Login Id is missing"
         });
         return defer.promise;
+    }
+    if(tokendata.data.partner_role.role.name == "admin"){
+
+    }else{
+
+        if(tokendata.data.id != data.login_id){
+            defer.reject({
+                status: 403,
+                message: "User Id mismatch"
+            });
+            return defer.promise;
+        }
     }
     partner_data_list.findAll({
         where: {
@@ -82,6 +109,19 @@ const post = (req, file) => {
     let defer = q.defer();
     let promises = [];
     let data = req.params;
+    let tokendata = req.tokendata;
+    if(tokendata.data.partner_role.role.name == "admin"){
+
+    }else{
+
+        if(tokendata.data.id != data.login_id){
+            defer.reject({
+                status: 403,
+                message: "User Id mismatch"
+            });
+            return defer.promise;
+        }
+    }
     if (!data.login_id) {
         defer.reject({
             status: 403,
@@ -141,6 +181,7 @@ const post = (req, file) => {
 const Delete = (req) => {
     let defer = q.defer();
     let data = req.params;
+    let tokendata = req.tokendata;
     if(tokendata.data.partner_role.role.name == "admin"){
 
     }else{
@@ -217,7 +258,7 @@ const getPartnerDetails = (req) => {
                 model: partner_details
             }]
         })
-        .then(function (logindata) {
+        .then(logindata=> {
             defer.resolve(logindata)
         }).catch(error => {
             defer.reject({
@@ -232,6 +273,7 @@ const updatePartnerData = (req) => {
     let defer = q.defer();
     let data = req.params;
     let body = req.body;
+    let tokendata = req.tokendata;
     if (!data.id) {
         defer.reject({
             status: 403,
@@ -271,6 +313,8 @@ const checkEther = (req)=>{
     let data = req.params;
     let body = req.body;
     let tokendata = req.tokendata;
+         const request = require('request');
+        var config = require(__dirname + '/../../config/ether.json');
     if (!data.login_id) {
         defer.reject({
             status: 403,
@@ -290,37 +334,12 @@ const checkEther = (req)=>{
             return defer.promise;
         }
     }
+    let promises = [];
     partner_details.findOne({
         where: {
             login_id: data.login_id
         }
     }).then(partnerdetailsdata => {
-        // console.log(partnerdetailsdata,"=======================");
-        const request = require('request');
-        var config = require(__dirname + '/../../config/ether.json');
-		   request({
-        url: config.api,
-        method: 'GET',
-        headers: {
-            "content-type": "application/json"
-        }
-    }, function (error, response, body) {
-        let transcationdata = JSON.parse(body);
-            transcationdata.result.forEach(element => {
-                console.log(element.from.toUpperCase(),"================",typeof element.from);
-                console.log(partnerdetailsdata.ether_account.toUpperCase(),"========",typeof partnerdetailsdata.ether_account);
-                if(element.from.toUpperCase() === partnerdetailsdata.ether_account.toUpperCase()){
-                    console.log("iam here");
-                }
-            });
-        defer.resolve(JSON.parse(body));
-
-        // console.log(response.result)
-        // console.log(body,"=================");
-        // //console.log(JSON.parse(body))
-        //  console.log("API Response ", response);
-        // // console.log("API Error ", error);
-    });
     }).catch(error => {
         defer.reject({
             status: 400,
@@ -328,6 +347,121 @@ const checkEther = (req)=>{
         });
         return defer.promise;
     });
+    promises.push( 
+        request({
+            url: config.api,
+            method: 'GET',
+            headers: {
+                "content-type": "application/json"
+            }
+        
+                // transcationdata.result.forEach(element => {
+                //     console.log(element.from.toUpperCase(),"================",typeof element.from);
+                //     console.log(partnerdetailsdata.ether_account.toUpperCase(),"========",typeof partnerdetailsdata.ether_account);
+                //     if(element.from.toUpperCase() === partnerdetailsdata.ether_account.toUpperCase()){
+                //         console.log("iam here");
+                //     }
+                // });
+            // defer.resolve(JSON.parse(body));
+    
+            // console.log(response.result)
+            // console.log(body,"=================");
+            // //console.log(JSON.parse(body))
+            //  console.log("API Response ", response);
+            // // console.log("API Error ", error);
+        }).then(requestdata=>{
+            return requestdata;
+        })
+
+    )
+    // promises.push(
+    //     request({
+    //             url: config.api,
+    //             method: 'GET',
+    //             headers: {
+    //                 "content-type": "application/json"
+    //             }
+    //         }, function (error, response, body) {
+    //             // let transcationdata = JSON.parse(body);
+    //             //     transcationdata.result.forEach(element => {
+    //             //         console.log(element.from.toUpperCase(),"================",typeof element.from);
+    //             //         console.log(partnerdetailsdata.ether_account.toUpperCase(),"========",typeof partnerdetailsdata.ether_account);
+    //             //         if(element.from.toUpperCase() === partnerdetailsdata.ether_account.toUpperCase()){
+    //             //             console.log("iam here");
+    //             //         }
+    //             //     });
+    //             // defer.resolve(JSON.parse(body));
+        
+    //             // console.log(response.result)
+    //             // console.log(body,"=================");
+    //             // //console.log(JSON.parse(body))
+    //             //  console.log("API Response ", response);
+    //             // // console.log("API Error ", error);
+    //         })
+    // )
+    Promise.all(promises).then(data=>{
+        defer.resolve(data);
+    }).catch(error => {
+        defer.reject({
+            status: 400,
+            message: error.message
+        });
+        return defer.promise;
+    })
+    return defer.promise;
+}
+const addPartnerEtheraccount = (req)=>{
+    let defer = q.defer();
+    let data = req.params;
+    let body = req.body;
+    let tokendata = req.tokendata;
+    if (!data.login_id) {
+        defer.reject({
+            status: 403,
+            message: "Id is  missing"
+        });
+        return defer.promise;
+    }
+    if(tokendata.data.partner_role.role.name == "admin"){
+
+    }else{
+
+        if(tokendata.data.id != data.login_id){
+            defer.reject({
+                status: 403,
+                message: "User Id mismatch"
+            });
+            return defer.promise;
+        }
+    }
+    partner_details.findOne({where:{
+        ether_account:body.ether_account
+    }}).then(partnerdata=>{
+        if(!partnerdata){
+            let updatedata = {};
+            updatedata.ether_account = body.ether_account
+            partner_details.update(updatedata, {
+                where: {
+                    login_id: body.login_id
+                }
+            }).then(updateddata => {
+                defer.resolve(updateddata);
+            }).catch(error => {
+                defer.reject({
+                    status: 400,
+                    message: error.message
+                });
+                return defer.promise;
+            })
+        }else{
+            defer.reject({
+                status: 403,
+                message: "This address is already exists"
+            });
+            return defer.promise;
+        }
+    })
+   
     return defer.promise;
 }
 const Partner = {
@@ -337,7 +471,8 @@ const Partner = {
     Delete,
     getPartnerDetails,
     updatePartnerData,
-    checkEther
+    checkEther,
+    addPartnerEtheraccount
 };
 
 export {
