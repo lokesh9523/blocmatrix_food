@@ -1,7 +1,7 @@
 {
-  "name": "pashumart_node_api",
+  "name": "mailjanitor",
   "version": "1.0.0",
-  "description": "These APIs are for Pashumart",
+  "description": "These APIs are for mailjanitor",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node bin/www"
@@ -48,12 +48,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nikg-04/pashumart_node_api.git"
+    "url": "git+https://github.com/lokesh9523/mail_jainitar_node_api.git"
   },
   "author": "Nikhil K. Gupta",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nikg-04/pashumart_node_api/issues"
+    "url": "https://github.com/lokesh9523/mail_jainitar_node_api/issues"
   },
-  "homepage": "https://github.com/nikg-04/pashumart_node_api#readme"
+  "homepage": "https://github.com/lokesh9523/mail_jainitar_node_api#readme"
 }
