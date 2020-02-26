@@ -1,8 +1,10 @@
 default:
-  wsURL: wss://rinkeby.infura.io/ws/v3/605567f94946494a81e52ac8ca2784de
-  mainwsURL: wss://mainnet.infura.io/v3/605567f94946494a81e52ac8ca2784de
+  testwsURL: wss://rinkeby.infura.io/ws/v3/605567f94946494a81e52ac8ca2784de
+  wsURL: wss://mainnet.infura.io/v3/605567f94946494a81e52ac8ca2784de
   rpcURL: https://rinkeby.infura.io/v3/605567f94946494a81e52ac8ca2784de
-  contractAddress: '0x90ed4bb7b18376d63175c93d4726edd19fd794ce'
-  adminAddress: '0xe75F5C9C9177fC3553Db4332F419b91d2A3D6Edc'
+  contractAddress : '0xaf80e6612d9c2e883122e7f2292ee6c34176ad4f'
+  testcontractAddress: '0x90ed4bb7b18376d63175c93d4726edd19fd794ce'
+  adminAddress : '0x5498Ab05F638Cc1d66758aAB127cd2FEEF3baFaf'
+  testadminAddress: '0xe75F5C9C9177fC3553Db4332F419b91d2A3D6Edc'
   OneEtheIsEqualTo: 50
   OneTokenIsEqualTo: 1000
