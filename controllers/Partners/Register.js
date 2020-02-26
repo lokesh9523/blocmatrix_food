@@ -1,7 +1,10 @@
 import {
 	sequelize,
 	login,
-	partner_details
+	partner_details,
+	roles,
+	partner_roles
+	
 } from './../../models';
 var md5 = require('md5');
 import q from 'q';
@@ -58,7 +61,13 @@ const post = (data) => {
 						"amount": 0
 					}
 					partner_details.create(partnerdata).then(partnerdata => {
-
+							if(partnerdata){
+								let role = {
+									"login_id":logindata.id,
+									"role_id":2
+								}
+								partner_roles.create(role)
+							}
 					}).catch(error => {
 						defer.reject({
 							status: 400,

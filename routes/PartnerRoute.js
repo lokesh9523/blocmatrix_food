@@ -4,15 +4,16 @@ import {
 	Register as registerController,
 	Login as loginController,
 	Partner as partnerController,
+	Request as requestController
 } from './../controllers';
 import {
-    upload
+    upload,Token
 } from './../middleware';
 var router = express.Router();
 
 
-router.put('/:login_id', function (req, res, next) {
-    partnerController.put(req.body)
+router.route('/:login_id').put(Token, function (req, res, next) {
+    partnerController.put(req)
 	.then((response) => {
         res.status(200);
 		res.send({
@@ -25,7 +26,7 @@ router.put('/:login_id', function (req, res, next) {
 	})
 });
 
-router.route('/:login_id').post( upload.any(),function(req, res, next){
+router.route('/:login_id').post(Token,upload.any(),function(req, res, next){
 	const files = req.files
    if (!files) {
 	 const err = new Error('Please upload the files');
@@ -42,7 +43,7 @@ router.route('/:login_id').post( upload.any(),function(req, res, next){
    })
 })
 
-router.route('/:login_id').get(function(req,res,next){
+router.route('/:login_id').get(Token,function(req,res,next){
 	partnerController.get(req).then((response)=>{
 		res.status(200);
 		res.send({
@@ -53,7 +54,7 @@ router.route('/:login_id').get(function(req,res,next){
 	})
 })
 
-router.route('/:login_id/partner_details').get(function(req,res,next){
+router.route('/:login_id/partner_details').get(Token,function(req,res,next){
 	partnerController.getPartnerDetails(req).then((response)=>{
 		res.status(200);
 		res.send({
@@ -64,7 +65,7 @@ router.route('/:login_id/partner_details').get(function(req,res,next){
 	})
 })
 
-router.route('/:login_id/data/:partner_id').delete(function(req,res,next){
+router.route('/:login_id/data/:partner_id').delete(Token,function(req,res,next){
 	partnerController.Delete(req).then((response)=>{
 		res.status(200);
 		res.send({
@@ -74,7 +75,7 @@ router.route('/:login_id/data/:partner_id').delete(function(req,res,next){
 		next(err);
 	})
 })
-router.route('/:login_id/data/:id').put(function(req,res,next){
+router.route('/:login_id/data/:id').put(Token,function(req,res,next){
 	partnerController.updatePartnerData(req).then((response)=>{
 		res.status(200);
 		res.send({
@@ -84,4 +85,41 @@ router.route('/:login_id/data/:id').put(function(req,res,next){
 		next(err);
 	})
 })
+// router.route('/:login_id/ether').put(Token,function(req,res,next){
+// 	partnerController.checkEther(req).then((response)=>{
+// 		res.status(200);
+// 		res.send({
+// 			data:response
+// 		});
+// 	}).catch(err =>{
+// 		next(err);
+// 	})
+// })
+
+router.route('/:login_id/ether').put(Token, function (req, res, next) {
+    partnerController.addPartnerEtheraccount(req)
+	.then((response) => {
+        res.status(200);
+		res.send({
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+});
+router.route('/:login_id/request').post(Token,function (req,res,next){
+	requestController.post(req)
+	.then((response) => {
+        res.status(200);
+		res.send({
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+});
 module.exports = router;
