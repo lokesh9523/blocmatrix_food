@@ -16,94 +16,91 @@ import {
 } from './Partner';
 
 var md5 = require('md5');
-// setInterval(function () {
-//     const request = require('request');
-//     console.log('second passedddddddddddddddddddddddd');
-//     var config = require(__dirname + '/../../config/ether.json');
-//     request({
-//         url: config.api,
-//         method: 'GET',
-//         headers: {
-//             "content-type": "application/json"
-//         }
-//     }, function (error, response, body) {
-//         // wss.clients.forEach(function each(client) {
-//         //     console.log(client);
-//         //     // client.send(JSON.stringify(response));
-//         // });
 
-//         let etherdata = JSON.parse(body);
-//         let wsdata = [];
-//         partner_details.findAll({
-//             where: {
-//                 ether_account: {
-//                     $ne: null
-//                 }
-//             }
-//         }).then(partnerdata => {
-//             partnerdata.forEach((partner, index) => {
-//                 if (partner.ether_account) {
-//                     var obj = etherdata.result.filter(e => e.from.toUpperCase() == partner.ether_account.toUpperCase());
-//                     // console.log(obj,'====================');
-//                     if (obj.length) {
-//                         etherdata.result.forEach(element => {
-//                             var data = {};
-//                             data.login_id = partner.login_id;
-//                             data.time_stamp = element.timeStamp;
-//                             data.from_address = element.from;
-//                             data.to_address = element.to;
-//                             data.block_number = element.blockNumber;
-//                             data.token = element.tokenSymbol;
-//                             data.value = element.value / 1000000000000000000;
-//                             ether_transcations.findOne({
-//                                 where: {
-//                                     login_id: data.login_id,
-//                                     time_stamp: data.time_stamp
-//                                 }
-//                             }).then(transcations => {
-//                                 if (!transcations) {
-//                                     ether_transcations.create(data).then(transcations_data => {
-//                                         var credits = {};
-//                                         wsdata.push(transcations_data.dataValues);
-//                                         credits.amount = data.value * 1000;
-//                                         partner_details.update(credits, {
-//                                             where: {
-//                                                 login_id: partner.login_id
-//                                             }
-//                                         }).then(creditsdata => {
-//                                             if (partnerdata.length == (index + 1)) {
-//                                                 wss.clients.forEach(function each(client) {
-//                                                      client.send(JSON.stringify(wsdata));
-//                                                 });
-//                                             }
-//                                         }).catch(error => {});
-//                                     }).catch(error => {})
-//                                 }
-//                             }).catch(error => {})
-//                         });
+const request = require('request');
 
-//                     }
+const yamlConfig = require('yaml-config');
 
-//                 }
-//             })
-//         }).catch(error => {});
-//         // if(etherdata.result.length){
-//         //     etherdata.result.forEach(element => {
-//         //         var data  = {};
-//         //         data.timestamp = element.timeStamp;
-//         //         data.from_address = element.from;
-//         //         data.to_address = element.to;
-//         //         data.block_number = element.blockNumber;
-//         //         data.token = element.tokenSymbole;
-//         //         data.value = element.value;
-//         //         console.log(data,"====================");
-//         //     });
-//         //}
-//         //console.log(JSON.parse(body))
-//         // console.log("API Response ", response);
-//         // console.log("API Error ", error);
-//     });
-// }, 60000);
+const config = yamlConfig.readConfig('config.yml');
+
+setInterval(function () {
+
+    ether_transcations.findAll({
+        where: {
+            status: 'Pending'
+        }
+    }).then(pendingtransactions => {
+        if (pendingtransactions && pendingtransactions.length) {
+            pendingtransactions.forEach(element => {
+                var url = 'https://' +
+                    config.httpAPI.url +
+                    '/api?module=transaction&action=gettxreceiptstatus&txhash=' +
+                    element.transcation_hash +
+                    '&apikey=' +
+                    config.httpAPI.apiKey;
+                console.log(url, 'url -----------------------------------url')
+                request({
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        "content-type": "application/json"
+                    }
+                }, function (error, response, body) {
+                    body = JSON.parse(body);
+                    console.log(body, "-------------------------------body")
+                    var status = "Pending";
+                    if (body.result.status === "1" || body.result.status === "0") {
+                        if (body.result.status === "1") {
+                            status = "Success";
+                        }
+                        if (body.result.status === "0") {
+                            status = "Error";
+                        }
+                        var data = {};
+                        data.status = status;
+                        ether_transcations.update(data, {
+                            where: {
+                                transcation_hash: element.transcation_hash
+                            }
+                        }).then(updatependingtranscation => {
+                            partner_details.findOne({
+                                where: {
+                                    login_id: element.login_id
+                                },
+                                raw: true
+                            }).then(partnerdetails => {
+                                var credits = element.value * config.TokenValue;
+                                console.log('Added credits ----------------', credits);
+                                var creditsdata = {};
+                                var totalCredits  = partnerdetails.amount + credits;
+                                creditsdata.amount =totalCredits;
+                                partner_details.update(creditsdata, {
+                                    where: {
+                                        login_id: element.login_id
+                                    }
+                                }).then(creditsdata => {                                    
+                                    console.log("data Updated!!!!!!!!!!!!!!!!!!!")
+                                    var wsData = {
+                                        login_id: element.login_id,
+                                        addedCredits: credits,
+                                        totalCredits: totalCredits,
+                                        method: 'CreditsUpdate'
+                                    };
+                                    console.log(wsData,"=======================wsData")
+                                    wss.clients.forEach(function each(client) {
+                                        client.send(JSON.stringify(wsData));
+                                    });
+                                })
+                            })
+                        })
+                    }
+
+                })
+            });
+        }
+    })
+
+}, config.TimeInterval);
 const get = (data) => {
     let defer = q.defer();
     defer.resolve({
