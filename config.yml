@@ -7,4 +7,22 @@ default:
   adminAddress : '0x5498Ab05F638Cc1d66758aAB127cd2FEEF3baFaf'
   testadminAddress: '0xe75F5C9C9177fC3553Db4332F419b91d2A3D6Edc'
   OneEtheIsEqualTo: 50
-  OneTokenIsEqualTo: 1000
+  TokenValue: 1000
+  TimeInterval: 5000
+  httpAPI:
+    url: api.etherscan.io
+    # url: api-rinkeby.etherscan.io
+    apiKey: 1R2ACZ69YGQQ4DVH8SPUEXAZTWV3G415IM
+  httpapi: https://api.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=0xaaed63db1ef84fc0c801a99146d777d69ac5838bc359ebebf537ba0b766843e4&apikey=1R2ACZ69YGQQ4DVH8SPUEXAZTWV3G415IM
+
+  # https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=0xaf80e6612d9c2e883122e7f2292ee6c34176ad4f&apikey=605567f94946494a81e52ac8ca2784de
+
+  # http://api-rinkeby.etherscan.io/api?module=account&action=tokentx&address=0xe75F5C9C9177fC3553Db4332F419b91d2A3D6Edc&startblock=0&endblock=999999999&sort=asc&apikey=1R2ACZ69YGQQ4DVH8SPUEXAZTWV3G415IM
+
+  # https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xaf80e6612d9c2e883122e7f2292ee6c34176ad4f&page=1&offset=100&sort=asc&apikey=1R2ACZ69YGQQ4DVH8SPUEXAZTWV3G415IM
+
+
+  # http://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0xaf80e6612d9c2e883122e7f2292ee6c34176ad4f&startblock=0&endblock=999999999&sort=asc&apikey=1R2ACZ69YGQQ4DVH8SPUEXAZTWV3G415IM
+
+
+  # https://api.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=0xf068225adb15266a63e278c19525f48b44cb053b576d29f17f51c8d01cf47341&apikey=1R2ACZ69YGQQ4DVH8SPUEXAZTWV3G415IM

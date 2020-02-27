@@ -57,7 +57,9 @@ provider.on('error', e => console.error('WS Error', e));
 provider.on('end', e => console.error('WS End', e));
 provider.on('connect', () => { console.log('Ethereum Blockchain Connected\n-----------------------------');
 
-ethereum.trackBlockchain() });
+ ethereum.trackBlockchain();
+// ethereum.gettranscation();
+ });
 
 
 
