@@ -50,16 +50,16 @@ const yamlConfig = require('yaml-config');
 
 const config = yamlConfig.readConfig('config.yml');
 const wsURL = config.wsURL
-export const web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider(wsURL));
+// export const web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider(wsURL));
 
-const provider = new Web3.providers.WebsocketProvider(wsURL);
-provider.on('error', e => console.error('WS Error', e));
-provider.on('end', e => console.error('WS End', e));
-provider.on('connect', () => { console.log('Ethereum Blockchain Connected\n-----------------------------');
+// const provider = new Web3.providers.WebsocketProvider(wsURL);
+// provider.on('error', e => console.error('WS Error', e));
+// provider.on('end', e => console.error('WS End', e));
+// provider.on('connect', () => { console.log('Ethereum Blockchain Connected\n-----------------------------');
 
- ethereum.trackBlockchain();
+//  ethereum.trackBlockchain();
 // ethereum.gettranscation();
- });
+//  });
 
 
 

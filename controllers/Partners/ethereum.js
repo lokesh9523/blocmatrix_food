@@ -19,8 +19,8 @@ const config = yamlConfig.readConfig('config.yml');
 const trackBlockchain = () => {
     var subscription;
     const request = require('request');
-    const adminAddress = config.adminAddress;
-    const contractAddress = config.contractAddress;
+    const adminAddress = config.testadminAddress;
+    const contractAddress = config.testcontractAddress;
     try {
 
         // Subscribe to WebSocket
@@ -161,6 +161,66 @@ const trackBlockchain = () => {
     }
 }
 
+// [
+//     {
+//       "constant": true,
+//       "inputs": [],
+//       "name": "name",
+//       "outputs": [
+//         {
+//           "name": "",
+//           "type": "string"
+//         }
+//       ],
+//       "payable": false,
+//       "type": "function"
+//     },
+//     {
+//       "constant": true,
+//       "inputs": [],
+//       "name": "decimals",
+//       "outputs": [
+//         {
+//           "name": "",
+//           "type": "uint8"
+//         }
+//       ],
+//       "payable": false,
+//       "type": "function"
+//     },
+//     {
+//       "constant": true,
+//       "inputs": [
+//         {
+//           "name": "_owner",
+//           "type": "address"
+//         }
+//       ],
+//       "name": "balanceOf",
+//       "outputs": [
+//         {
+//           "name": "balance",
+//           "type": "uint256"
+//         }
+//       ],
+//       "payable": false,
+//       "type": "function"
+//     },
+//     {
+//       "constant": true,
+//       "inputs": [],
+//       "name": "symbol",
+//       "outputs": [
+//         {
+//           "name": "",
+//           "type": "string"
+//         }
+//       ],
+//       "payable": false,
+//       "type": "function"
+//     }
+//   ]
+  
 const Ethereum = {
     trackBlockchain
 };
