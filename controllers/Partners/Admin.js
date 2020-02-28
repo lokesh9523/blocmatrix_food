@@ -80,12 +80,18 @@ setInterval(function () {
                                 if (!transcations) {
                                     console.log(transcations,"=======================transcations")
                                     ether_transcations.create(data).then(transcations_data => {
-                                        var credits = {};
-                                        var credits = data.value * config.TokenValue;
-                                        console.log('Added credits ----------------', credits);
-                                        var creditsdata = {};
-                                        var totalCredits = partner.amount + credits;
-                                        creditsdata.amount = totalCredits;
+                                        partner_details.findOne({
+                                            where: {
+                                                login_id: element.login_id
+                                            },
+                                            raw: true
+                                        }).then(partnerdetails => {
+                                            var credits = {};
+                                            var credits = data.value * config.TokenValue;
+                                            console.log('Added credits ----------------', credits);
+                                            var creditsdata = {};
+                                            var totalCredits = partnerdetails.amount + credits;
+                                            creditsdata.amount = totalCredits;
                                         console.log("################# updating credits of user #####################");
                                         partner_details.update(creditsdata  , {
                                             where: {
@@ -105,6 +111,9 @@ setInterval(function () {
                                         }).catch(error1 => {
                                             console.log(error1,"=================error1")
                                         });
+                                    }).catch(error4 =>{
+
+                                    })
                                     }).catch(error2 => {
                                         console.log(error2,"=================error1")
                                     })
@@ -164,12 +173,12 @@ setInterval(function () {
 //                                 transcation_hash: element.transcation_hash
 //                             }
 //                         }).then(updatependingtranscation => {
-//                             partner_details.findOne({
-//                                 where: {
-//                                     login_id: element.login_id
-//                                 },
-//                                 raw: true
-//                             }).then(partnerdetails => {
+                            // partner_details.findOne({
+                            //     where: {
+                            //         login_id: element.login_id
+                            //     },
+                            //     raw: true
+                            // }).then(partnerdetails => {
 //                                 var credits = element.value * config.TokenValue;
 //                                 console.log('Added credits ----------------', credits);
 //                                 var creditsdata = {};
