@@ -82,7 +82,7 @@ setInterval(function () {
                                     ether_transcations.create(data).then(transcations_data => {
                                         partner_details.findOne({
                                             where: {
-                                                login_id: element.login_id
+                                                login_id: partner.login_id
                                             },
                                             raw: true
                                         }).then(partnerdetails => {
@@ -112,7 +112,7 @@ setInterval(function () {
                                             console.log(error1,"=================error1")
                                         });
                                     }).catch(error4 =>{
-
+                                        console.log(error4,"=================error1")
                                     })
                                     }).catch(error2 => {
                                         console.log(error2,"=================error1")
