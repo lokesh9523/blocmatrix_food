@@ -1,4 +1,5 @@
 default:
+  Url: http://18.191.159.237:3001/
   testwsURL: wss://rinkeby.infura.io/ws/v3/605567f94946494a81e52ac8ca2784de
   wsURL: wss://mainnet.infura.io/ws/v3/605567f94946494a81e52ac8ca2784de
   rpcURL: https://rinkeby.infura.io/v3/605567f94946494a81e52ac8ca2784de

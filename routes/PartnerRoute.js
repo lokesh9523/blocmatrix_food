@@ -4,7 +4,8 @@ import {
 	Register as registerController,
 	Login as loginController,
 	Partner as partnerController,
-	Request as requestController
+	Request as requestController,
+	Cleanemail as cleanemailController
 } from './../controllers';
 import {
     upload,Token
@@ -118,6 +119,18 @@ router.route('/:login_id/request').post(Token,function (req,res,next){
         });
 	})
 	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+});
+router.route('/:login_id/file/:file_id/clean').get(Token,function(req,res,next){
+	cleanemailController.post(req)
+	.then((response) =>{
+		res.status(200);
+		res.send({
+            data: response
+        });
+	}).catch(err => {
 		console.log(err);
 		next(err);
 	})

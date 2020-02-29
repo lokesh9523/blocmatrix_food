@@ -21,17 +21,19 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     email_count: {
-      type: DataTypes.STRING(45),
-      allowNull: false
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
+      defaultValue: '0'
     },
     email_cleaned: {
-      type: DataTypes.STRING(45),
-      allowNull: true,
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
       defaultValue: '0'
     },
     status: {
-      type: DataTypes.STRING(45),
-      allowNull: false
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
+      defaultValue: '0'
     },
     active: {
       type: DataTypes.INTEGER(4),
