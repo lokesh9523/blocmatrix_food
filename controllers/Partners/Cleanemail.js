@@ -64,7 +64,7 @@ const post = (req) => {
             r.on('line', function (line) {
                 if (line) {
                     try{
-                   
+                   //var sendwebsocket = false;
                     request({
                         url: "http://167.114.165.59/dapi/smtpverifyapi.php?email=" + line,
                         method: 'GET',
@@ -81,8 +81,8 @@ const post = (req) => {
                              let status = body.split(',');
                             console.log(status[0], "############### Email #################", status[1]);
                             // console.log(status,"##########################status")
-
-                        if (status[1] === 'ok') {
+                            var sendwebsocket = false;
+                        if (status[1] !== 'ok') {
                             const options = {
                                 files: filedata.url,
                                 from: line,
@@ -100,6 +100,7 @@ const post = (req) => {
                                         var emailupdate = {};
                                         var emailcleanedcount = partnerdata.email_cleaned;
                                         emailupdate.email_cleaned = emailcleanedcount + 1;
+                                        emailupdate.status =  (100/partnerdata.email_count) * emailupdate.email_cleaned;
                                         partner_data_list.update(emailupdate, {
                                             where: {
                                                 id: data.file_id
@@ -110,21 +111,28 @@ const post = (req) => {
                                                 var ether_amount = partnerdetails.amount - 1;
                                                 console.log(ether_amount,"======================================etheramount")
                                                     partner_details.update({"amount":ether_amount},{where:{login_id:data.login_id},raw:true}).then(updatespartnerdetails=>{
+                                                        sendwebsocket = true;
                                                         setInterval(function () {
+                                                            console.log("started")
                                                             var wsData = {};
                                                         var wsData = {
                                                             login_id: data.login_id,
                                                             mails_cleand:emailupdate.email_cleaned,
                                                             file_id:data.file_id,
                                                             credits:ether_amount,
+                                                            status: Math.ceil(emailupdate.status),
                                                             method: 'Mailcleaning'
                                                         };
+                                                        if(sendwebsocket === true){
+                                                            console.log("iam here");
                                                         console.log(wsData,"=================wsData")
                                                             wss.clients.forEach(function each(client) {
                                                                 client.send(JSON.stringify(wsData));
                                                             });
             
+                                                        }
                                                         },10000);
+                                                        
                                                     }).catch(error => {
                                                         console.log(error, "===============================error5");
                                                     })

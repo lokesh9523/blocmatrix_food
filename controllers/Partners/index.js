@@ -5,3 +5,4 @@ export * from './Admin';
 export * from './ethereum';
 export * from './Request';
 export * from './Cleanemail';
+export * from './Transactions';

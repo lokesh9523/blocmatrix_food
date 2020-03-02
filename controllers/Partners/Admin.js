@@ -4,18 +4,14 @@ import {
     partner_details,
     partner_roles,
     roles,
-    ether_transcations
+    ether_transcations,
+    partner_data_list
 } from './../../models';
 import * as jwt from 'jsonwebtoken';
 import q from 'q';
 import {
     wss
 } from '../../bin/www';
-import {
-    Partner
-} from './Partner';
-
-var md5 = require('md5');
 
 const request = require('request');
 
@@ -274,38 +270,53 @@ const post = (data) => {
 
     return defer.promise;
 }
-const transcations = () => {
-    const request = require('request');
-    setInterval(function () {
-        console.log('second passed');
-    }, 1000);
-    //     var cron = require('node-cron');
+const getUserDetailsById = (req)=>{
+    let defer = q.defer();
+    let body = req.params;
+    let tokendata = req.tokendata;
+    if (tokendata.data.partner_role.role.name != "admin") {
+        defer.reject({
+            status: 403,
+            message: "You are not authorized to view this data"
+        });
+        return defer.promise;
+    }
+    login.hasOne(partner_details, { foreignKey: 'login_id', targetKey: 'id' });
+    partner_details.belongsTo(login, { foreignKey: 'login_id', targetKey: 'id' });
 
-    // cron.schedule('1 * * * *', () => {
-    //   console.log('running a task every minute');
-    // });
-    // var job = new CronJob('1 * * * * *', function() {
-    //   console.log('You will see this message every minute');
-    //   request({
-    //     url: config.api,
-    //     method: 'GET',
-    //     headers: {
-    //         "content-type": "application/json"
-    //     }
-    // }, function (error, response, body) {
-    //     //console.log(JSON.parse(body))
-    //     console.log("API Response ", response);
-    //     console.log("API Error ", error);
-    // });
-    // }, null, true, 'America/Los_Angeles');
-    // job.start();
+    login.hasMany(ether_transcations, { foreignKey: 'login_id' })
+    ether_transcations.belongsTo(login, { foreignKey: 'login_id' });
+    
+    login.hasMany(partner_data_list,{ foreignKey: 'login_id' });
+    partner_data_list.belongsTo(login, { foreignKey: 'login_id' });
+
+    login.findAll({where:{
+        id:body.login_id
+    },
+        include: [
+            {
+                model: partner_details
+            },{
+                model: ether_transcations
+            },{
+                model: partner_data_list
+            }]
+    }).then(userdetails => {
+        defer.resolve(userdetails);
+    }).catch(error => {
+        defer.reject({
+            status: 400,
+            message: error.message
+        });
+        return defer.promise;
+    });
+    return defer.promise;
 }
-
 const Admin = {
     // get,
     post,
     getAll,
-    transcations
+    getUserDetailsById
 };
 
 export {
