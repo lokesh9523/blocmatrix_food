@@ -130,7 +130,7 @@ const post = (req) => {
                                                                 mails_cleand: emailupdate.email_cleaned,
                                                                 file_id: data.file_id,
                                                                 credits: ether_amount,
-                                                                status: Math.ceil(emailupdate.status),
+                                                                status: 100,
                                                                 file_name:filedata.name,
                                                                 method: 'Mailcleaning Completed'
                                                             };
@@ -194,7 +194,7 @@ const post = (req) => {
                                             mails_cleand: partnerdatalist.partner_data_lists[0].email_cleaned,
                                             file_id: data.file_id,
                                             credits: partnerdatalist.partner_detail.amount,
-                                            status:partnerdatalist.partner_data_lists[0].status,
+                                            status:100,
                                             file_name:partnerdatalist.partner_data_lists[0].name,
                                             method: 'Mailcleaning Completed'
                                         };
