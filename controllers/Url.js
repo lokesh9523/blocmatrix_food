@@ -1,7 +1,7 @@
 import {
     sequelize,
-    domains,
-    ether_transcations
+    ether_transcations,
+    url
 
 } from './../models';
 import q from 'q';
@@ -17,12 +17,12 @@ const getAll = (req) => {
         });
         return defer.promise;
     }
-    domains.findAll({
+    url.findAll({
         where: {
             status: 1
         }
-    }).then(domains => {
-        defer.resolve(domains);
+    }).then(Urls => {
+        defer.resolve(Urls);
     }).catch(error => {
         defer.reject({
             status: 400,
@@ -43,15 +43,16 @@ const post = (req) => {
         });
         return defer.promise;
     }
-    if (!body.domain_name) {
+    if (!body.url) {
         defer.reject({
             status: 403,
-            message: "Domain Name is missing"
+            message: "Url is missing"
         });
         return defer.promise;
     }
-    domains.create(body).then(domains => {
-        defer.resolve(domains);
+    
+    url.create(body).then(Urls => {
+        defer.resolve(Urls);
     }).catch(error => {
         defer.reject({
             status: 400,
@@ -74,25 +75,25 @@ const put = (req) => {
         return defer.promise;
     }
 
-    if (!params.domain_id) {
+    if (!params.url_id) {
         defer.reject({
             status: 403,
             message: "ID is missing"
         });
         return defer.promise;
     }
-    domains.update(body, {
+    url.update(body, {
         where: {
-            id: params.domain_id
+            id: params.url_id
         }
-    }).then(domaindata => {
-        if (domaindata) {
-            domains.findOne({
+    }).then(urldata => {
+        if (urldata) {
+            url.findOne({
                 where: {
-                    id: params.domain_id
+                    id: params.url_id
                 }
-            }).then(domaindataupdated => {
-                defer.resolve(domaindataupdated)
+            }).then(urldataupdated => {
+                defer.resolve(urldataupdated)
             }).catch(error => {
                 defer.reject({
                     status: 400,
@@ -121,12 +122,12 @@ const get = (req) => {
         });
         return defer.promise;
     }
-    domains.findOne({
+    url.findOne({
         where: {
-            id:body.domain_id
+            id:body.url_id
         }
-    }).then(domains => {
-        defer.resolve(domains);
+    }).then(Urls => {
+        defer.resolve(Urls);
     }).catch(error => {
         defer.reject({
             status: 400,
@@ -137,29 +138,9 @@ const get = (req) => {
     return defer.promise;
 }
 
-// const getAllTranscations = (req) => {
-//     let defer = q.defer();
-//     let tokendata = req.tokendata;
-//     if (tokendata.data.partner_role.role.name != "admin") {
-//         defer.reject({
-//             status: 403,
-//             message: "You are not authorized to view this data"
-//         });
-//         return defer.promise;
-//     }
-//     ether_transcations.findAll().then(ethertranscations => {
-//         defer.resolve(ethertranscations);
-//     }).catch(error => {
-//         defer.reject({
-//             status: 400,
-//             message: error.message
-//         });
-//         return defer.promise;
-//     });
-//     return defer.promise;
-// }
 
-const Domains = {
+
+const Urls = {
     post,
     getAll,
     put,
@@ -167,5 +148,5 @@ const Domains = {
 };
 
 export {
-    Domains
+    Urls
 };
