@@ -64,7 +64,7 @@ const post = (req) => {
             })
             r.on('line', function (line) {
                 console.log(line, "---------------============================:wq")
-                console.log(linesCount, "========================");
+                // console.log(linesCount, "========================");
                 try {
                     request({
                         url: "http://167.114.165.59/dapi/smtpverifyapi.php?email=" + line,
@@ -72,7 +72,7 @@ const post = (req) => {
                         headers: {
                             "content-type": "application/json"
                         },
-                        maxAttempts: 10, 
+                        maxAttempts: 15, 
                         retryDelay: 5000, 
                         retryStrategy: request.RetryStrategies.HTTPOrNetworkError
                     }, function (error, response, body) {
