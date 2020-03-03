@@ -148,9 +148,10 @@ const post = (req, file) => {
         output: process.stdout,
         terminal: false
     });
-    r.on('line', function (line) {if(line){
+    r.on('line', function (line) {
+        // if(line){
         linesCount++;
-    } 
+    // } 
     });
     r.on('close', function () {
         console.log(linesCount); 
