@@ -1,3 +1,3 @@
-export * from './Partners';
-export * from './Domain';
-export * from './Url';
+ export * from './Login';
+ export * from './Register';
+ export * from './Food';

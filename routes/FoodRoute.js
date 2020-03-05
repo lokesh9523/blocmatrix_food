@@ -1,17 +1,23 @@
 import express from 'express';
+import {
+	Food as foodController,
+	FoodTypes as typeController
+} from './../controllers'
+import {
+    token
+} from './../middleware'
 
-import {
-	Domains as domaincontroller
-} from './../controllers';
-import {
-   Token
-} from './../middleware';
 var router = express.Router();
+// router.get('/', function (req, res, next) {
+// 	res.status(200);
+// 	res.send({
+// 		status: 'running',
+// 		message: 'Welcome to Blocmatrix api'
+// 	});
+// });
 
-
-
-router.route('/').get(Token, function (req, res, next) {
-    domaincontroller.getAll(req)
+router.route('/').post(token,function(req,res,next){
+    foodController.post(req)
 	.then((response) => {
         res.status(200);
 		res.send({
@@ -23,8 +29,8 @@ router.route('/').get(Token, function (req, res, next) {
 		next(err);
 	})
 });
-router.route('/:domain_id').get(Token, function (req, res, next) {
-    domaincontroller.get(req)
+router.route('/').get(function(req,res,next){
+    foodController.getAll(req)
 	.then((response) => {
         res.status(200);
 		res.send({
@@ -36,9 +42,8 @@ router.route('/:domain_id').get(Token, function (req, res, next) {
 		next(err);
 	})
 });
-
-router.route('/').post(Token, function (req, res, next) {
-    domaincontroller.post(req)
+router.route('/type').get(function(req,res,next){
+    typeController.getAll(req)
 	.then((response) => {
         res.status(200);
 		res.send({
@@ -50,9 +55,8 @@ router.route('/').post(Token, function (req, res, next) {
 		next(err);
 	})
 });
-
-router.route('/:domain_id').put(Token, function (req, res, next) {
-    domaincontroller.put(req)
+router.route('/:food_id').delete(function(req,res,next){
+    foodController.getAll(req)
 	.then((response) => {
         res.status(200);
 		res.send({
@@ -64,5 +68,4 @@ router.route('/:domain_id').put(Token, function (req, res, next) {
 		next(err);
 	})
 });
-
 module.exports = router;

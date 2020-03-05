@@ -1,37 +1,37 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('partner_details', {
+  return sequelize.define('food_types', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    login_id: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
+    name: {
+      type: DataTypes.STRING(45),
       allowNull: false
     },
-    amount: {
-      type: DataTypes.BIGINT,
-      allowNull: true
+    display_name: {
+      type: DataTypes.STRING(45),
+      allowNull: false
+    },
+    active: {
+      type: DataTypes.INTEGER(4),
+      allowNull: false,
+      defaultValue: '1'
     },
     date_created: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
-    },
-    date_updated: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     },
-    ether_account: {
-      type: DataTypes.STRING(200),
+    date_updated: {
+      type: DataTypes.DATE,
       allowNull: true
     }
   }, {
-    tableName: 'partner_details',
+    tableName: 'food_types',
     createdAt: false,
     updatedAt: false
   });

@@ -1,28 +1,24 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('domains', {
+  return sequelize.define('role', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    url: {
-      type: DataTypes.STRING(100),
+    name: {
+      type: DataTypes.STRING(45),
       allowNull: false
     },
-    domain_name: {
-      type: DataTypes.STRING(100),
-      allowNull: false
-    },
-    speed_per_hour: {
+    display_name: {
       type: DataTypes.STRING(45),
       allowNull: false
     },
     status: {
       type: DataTypes.INTEGER(4),
-      allowNull: true,
+      allowNull: false,
       defaultValue: '1'
     },
     date_created: {
@@ -35,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'domains',
+    tableName: 'role',
     createdAt: false,
     updatedAt: false
   });

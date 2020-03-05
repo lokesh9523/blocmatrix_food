@@ -1,10 +1,8 @@
 'use strict';
 import path from 'path';
 import IndexRoute from './IndexRoute';
-import PartnerRoute from './PartnerRoute';
-import AdminRoute from './AdminRoute';
-import DomainRoute from './Domain';
-import UrlRoute from './Urls';
+import FoodRoute from './FoodRoute';
+// import AdminRoute from './AdminRoute';
 import {
 	Router
 } from 'express';
@@ -15,9 +13,8 @@ let router = Router();
 
 module.exports = function (app) {
 	router.use('/', IndexRoute);
-	router.use('/partner', PartnerRoute);
-	router.use('/admin',AdminRoute);
-	router.use('/domain',DomainRoute);
-	router.use('/url',UrlRoute);
+	router.use('/food',FoodRoute);
+	// router.use('/admin',AdminRoute);
+	// router.use('/domain',DomainRoute);
 	return router;
 }

@@ -1,7 +1,7 @@
 {
-  "name": "mailjanitor",
+  "name": "blocmatrix_food",
   "version": "1.0.0",
-  "description": "These APIs are for mailjanitor",
+  "description": "These APIs are for blockmatrix",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node bin/www"
@@ -42,20 +42,18 @@
     "replace-in-file": "^5.0.2",
     "request": "^2.88.2",
     "requestretry": "^4.1.0",
-    "sequelize": "^3.30.4",
+    "sequelize": "^3.35.1",
     "sequelize-auto": "^0.4.29",
-    "web3": "^1.2.6",
-    "ws": "^7.2.1",
     "yaml-config": "^0.3.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lokesh9523/mail_jainitar_node_api.git"
+    "url": "git+https://github.com/lokesh9523/blockmatrix_food__node_api.git"
   },
   "author": "Nikhil K. Gupta",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lokesh9523/mail_jainitar_node_api/issues"
+    "url": "https://github.com/lokesh9523/blockmatrix_food_node_api/issues"
   },
-  "homepage": "https://github.com/lokesh9523/mail_jainitar_node_api#readme"
+  "homepage": "https://github.com/lokesh9523/blockmatrix_food_node_api#readme"
 }

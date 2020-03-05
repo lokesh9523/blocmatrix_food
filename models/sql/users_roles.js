@@ -1,25 +1,24 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('url', {
+  return sequelize.define('users_roles', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    url: {
-      type: DataTypes.STRING(100),
+    login_id: {
+      type: DataTypes.BIGINT,
       allowNull: false
     },
-    status: {
-      type: DataTypes.INTEGER(5),
-      allowNull: false,
-      defaultValue: '1'
+    role_id: {
+      type: DataTypes.BIGINT,
+      allowNull: false
     },
     date_created: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     },
     date_updated: {
@@ -27,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'url',
+    tableName: 'users_roles',
     createdAt: false,
     updatedAt: false
   });

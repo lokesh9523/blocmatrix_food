@@ -1,28 +1,24 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('login', {
+  return sequelize.define('suppliers', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
-      type: DataTypes.STRING(45),
-      allowNull: true
-    },
-    email: {
-      type: DataTypes.STRING(45),
-      allowNull: false
-    },
-    username: {
-      type: DataTypes.STRING(45),
-      allowNull: false
-    },
-    mobile_number: {
+    login_id: {
       type: DataTypes.BIGINT,
-      allowNull: true
+      allowNull: false
+    },
+    food_id: {
+      type: DataTypes.BIGINT,
+      allowNull: false
+    },
+    quantity: {
+      type: DataTypes.STRING(45),
+      allowNull: false
     },
     date_created: {
       type: DataTypes.DATE,
@@ -32,13 +28,9 @@ module.exports = function(sequelize, DataTypes) {
     date_updated: {
       type: DataTypes.DATE,
       allowNull: true
-    },
-    password: {
-      type: DataTypes.STRING(100),
-      allowNull: false
     }
   }, {
-    tableName: 'login',
+    tableName: 'suppliers',
     createdAt: false,
     updatedAt: false
   });

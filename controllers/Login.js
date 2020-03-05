@@ -1,10 +1,10 @@
 import {
     sequelize,
-    login,
-    partner_details,
-    partner_roles,
-    roles
-} from './../../models';
+    logins,
+    users_data,
+    users_roles,
+    role
+} from './../models';
 import * as jwt from 'jsonwebtoken';
 import q from 'q';
 var md5 = require('md5');
@@ -17,7 +17,7 @@ const get = (data) => {
 }
 const post = (data) => {
     let defer = q.defer();
-    if (!data.username) {
+    if (!data.mobile_number) {
         defer.reject({
             status: 403,
             message: "Username is missing"
@@ -32,26 +32,26 @@ const post = (data) => {
         return defer.promise;
     }
     let md5Password = md5(data.password);
-    login.hasOne(partner_details, { foreignKey: 'login_id', targetKey: 'id' });
-    partner_details.belongsTo(login, { foreignKey: 'login_id', targetKey: 'id' });
+    logins.hasOne(users_data, { foreignKey: 'login_id', targetKey: 'id' });
+    users_data.belongsTo(logins, { foreignKey: 'login_id', targetKey: 'id' });
 
-    login.hasOne(partner_roles,{ foreignKey:'login_id',targetKey:'id' });
-    partner_roles.belongsTo(login, { foreignKey: 'login_id', targetKey: 'id' });
+    logins.hasOne(users_roles,{ foreignKey:'login_id',targetKey:'id' });
+    users_roles.belongsTo(logins, { foreignKey: 'login_id', targetKey: 'id' });
 
-    roles.hasMany(partner_roles, { foreignKey: 'role_id' })
-	partner_roles.belongsTo(roles, { foreignKey: 'role_id' });
-    login.findOne({
+    role.hasMany(users_roles, { foreignKey: 'role_id' })
+	users_roles.belongsTo(role, { foreignKey: 'role_id' });
+    logins.findOne({
             where: {
                 password: md5Password,
-                username: data.username
+                mobile_number: data.mobile_number
             },include: [
                 {
-                    model: partner_details
-                },{ model: partner_roles, include: [{ model: roles }] }]
+                    model: users_data
+                },{ model: users_roles, include: [{ model: role }] }]
         })
         .then(logindata=> {
             if (logindata) {
-                let token = jwt.sign({data:logindata},'mailjanitar');
+                let token = jwt.sign({data:logindata},'blocmatrix');
                 logindata.dataValues.token = token;
                 // console.log(logindata);
                 defer.resolve(logindata)

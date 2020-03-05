@@ -1,28 +1,32 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('roles', {
+  return sequelize.define('users_data', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
-      type: DataTypes.STRING(45),
+    login_id: {
+      type: DataTypes.BIGINT,
       allowNull: false
     },
-    display_name: {
-      type: DataTypes.STRING(45),
-      allowNull: false
+    name: {
+      type: DataTypes.STRING(100),
+      allowNull: true
     },
     date_created: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    date_updated: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
-    tableName: 'roles',
+    tableName: 'users_data',
     createdAt: false,
     updatedAt: false
   });
