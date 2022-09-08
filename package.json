@@ -38,7 +38,7 @@
     "node-cron": "^2.0.3",
     "node-xlsx": "^0.15.0",
     "q": "^1.4.1",
-    "read-excel-file": "^4.0.5",
+    "read-excel-file": "^4.1.0",
     "replace-in-file": "^5.0.2",
     "request": "^2.88.2",
     "requestretry": "^4.1.0",
